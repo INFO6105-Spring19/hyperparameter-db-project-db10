@@ -361,6 +361,7 @@ Query result:
 | DeepLearning_1_AutoML_20190416_102359              | 143789 |
 | DeepLearning_1_AutoML_20190415_212612              | 141464 |
 | DeepLearning_1_AutoML_20190416_112303              | 136979 |
+
 View 2
 ```sql
 -- view_2: find those GBM models order by mean residual variance
@@ -410,6 +411,7 @@ Query result:
 | DeepLearning_grid_1_AutoML_20190416_112303_model_4  | 232689 |
 | DeepLearning_grid_1_AutoML_20190416_102359_model_3  | 188405 |
 | DeepLearning_grid_1_AutoML_20190416_112303_model_3  | 187454 |
+
 View 4
 ```sql
 -- view_4: get the rmse of models whose running time equals to 1000s
@@ -435,6 +437,7 @@ Query result:
 | StackedEnsemble_BestOfFamily_AutoML_20190416_102359 | 364482 |    1000 |
 | StackedEnsemble_BestOfFamily_AutoML_20190416_112303 | 364461 |    1000 |
 | XRT_1_AutoML_20190416_112303                        | 132969 |    1000 |
+
 ### Contribution
 Zeyu Zhang: 
 >1. Designed the database and draw the conceptual schema
