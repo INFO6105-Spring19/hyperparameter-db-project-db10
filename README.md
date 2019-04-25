@@ -1,4 +1,4 @@
-#Hyper Parameter Project
+# Hyper Parameter Project
 
 ### Abstract
 This project has two main parts where part one is dedicated to create a database that store the metadata and data set details of house sales in king county.
@@ -437,19 +437,23 @@ Query result:
 | XRT_1_AutoML_20190416_112303                        | 132969 |    1000 |
 ### Contribution
 Zeyu Zhang: 
->1. Designed the database and draw the conceptual schema.
->2. Defined stored hyperparamaters for different machine learning models.
->3. Created database and imported data into the database.
->4. Performed database normalization.
->5. Designed 5 use cases.
->6. Draw the ER diagram.
->7. Write documentation with markdown.
+>1. Designed the database and draw the conceptual schema
+>2. Defined stored hyperparamaters for different machine learning models
+>3. Created database and imported data into the database
+>4. Performed database normalization
+>5. Designed 5 use cases
+>6. Modified functions and views
+>7. Draw the ER diagram
+>8. Write documentation with markdown.
 
 Xuan Shen:
 >1. Designed the database
 >2. Processed H2O generated result file to csv
 >3. Designed 5 use cases
->4. Performed database normalization.
+>4. Created 4 functions
+>5. Created 4 viewa
+>6. Performed database normalization.
+
 ### References
 1. [H2O Documentation](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/index.html)
 2. [Project Sample](https://github.com/prabhuSub/Hyperparamter-Samples) by Prabhu
