@@ -464,7 +464,7 @@ Xuan Shen:
 4. [Database Assignments](https://github.com/paulzhang1992/Data-Management-and-Database-Design)
 5. [Data Source](https://www.kaggle.com/harlfoxem/housesalesprediction)
 ### License
-Copyright <2019> \<Zeyu Zhang> <Xuan Shen>
+Copyright <2019> \<Zeyu Zhang> \<Xuan Shen>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
