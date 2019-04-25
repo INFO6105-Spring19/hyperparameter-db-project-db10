@@ -236,6 +236,204 @@ Query result:
 | Distributed Random Forest  | 164143.4000 | housing price |
 | DeepLearning               | 167963.0000 | housing price |
 
+### Functions
+Function 1
+```sql
+-- function_1: find if the deep learning model that has the activation of 'Rectifier'
+DELIMITER //
+create function find_rectifier_dp(id varchar(64))
+returns boolean
+begin
+  declare result text;
+  select activation into result from DP_hyperparameter
+    where model_id = id;
+  return result = 'Rectifier';
+end;
+//
+DELIMITER ;
+```
+
+```sql
+select find_rectifier_dp('DeepLearning_grid_1_AutoML_20190416_102359_model_2');
+```
+Query result:
+
+| find_rectifier_dp('DeepLearning_grid_1_AutoML_20190416_102359_model_2') |
+|:-------------------------------------------------------------------------:|
+|                                                                       0 |
+
+Function 2
+```sql
+-- function_2: find if the GBM model whose seed is negative
+DELIMITER //
+create function find_negative_seed_GBM(id varchar(64))
+returns boolean
+begin
+  declare result float;
+  select seed into result from GBM_hyperparameter
+    where model_id = id;
+  return result < 0;
+end;
+//
+DELIMITER ;
+```
+```sql
+select find_negative_seed_GBM('GBM_grid_1_AutoML_20190418_165439_model_1');
+```
+Query result:
+
+| find_negative_seed_GBM('GBM_grid_1_AutoML_20190418_165439_model_1') |
+|:---------------------------------------------------------------------:|
+|                                                                   0 |
+
+Function 3
+```sql
+-- function_3: find the XRT models whose distribution is what we need(like gaussian distribution)
+DELIMITER //
+create function find_gaussian_distribution_XRT(dis text, id varchar(64))
+returns boolean
+begin
+  declare r text;
+  select distribution into r from XRT_hyperparameter
+    where model_id = id;
+  return r = dis;
+end;
+//
+DELIMITER ;
+```
+```sql
+select find_gaussian_distribution_XRT('gaussian','XRT_1_AutoML_20190416_102359');
+```
+Query result:
+
+| find_gaussian_distribution_XRT('gaussian','XRT_1_AutoML_20190416_102359') |
+|:---------------------------------------------------------------------------:|
+|                                                                         1 |
+
+Function 4
+```sql
+-- function_4: find if the rho of the deep learning model meets the requirements
+DELIMITER //
+create function find_rho_dp(req float, id varchar(64))
+returns boolean
+begin
+  declare r float;
+  select rho into r from DP_hyperparameter
+    where model_id = id;
+  return r > req;
+end;
+//
+DELIMITER ;
+```
+```sql
+select find_rho_dp(0.99,'DeepLearning_1_AutoML_20190416_112303');
+```
+Query result:
+
+| find_rho_dp(0.99,'DeepLearning_1_AutoML_20190416_112303') |
+|:----------------------------------------------------------:|
+|                                                         0 |
+
+### Views
+View 1
+```sql
+-- view_1: find those deep learning models order by rmse.
+create or replace view deep_learning_leaderboard as
+  select DP_hyperparameter.model_id, leaderboard.rmse
+  from DP_hyperparameter left join leaderboard on DP_hyperparameter.model_id = leaderboard.model_id
+  order by leaderboard.rmse desc
+```
+```sql
+SELECT * FROM hyperparameter.deep_learning_leaderboard limit 10;
+```
+Query result:
+
+| model_id                                           | rmse   |
+|:----------------------------------------------------:|:--------:|
+| DeepLearning_grid_1_AutoML_20190416_112303_model_4 | 232689 |
+| DeepLearning_grid_1_AutoML_20190416_102359_model_3 | 188405 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_3 | 187454 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_2 | 186716 |
+| DeepLearning_grid_1_AutoML_20190416_102359_model_2 | 156120 |
+| DeepLearning_grid_1_AutoML_20190416_102359_model_1 | 155666 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_1 | 150348 |
+| DeepLearning_1_AutoML_20190416_102359              | 143789 |
+| DeepLearning_1_AutoML_20190415_212612              | 141464 |
+| DeepLearning_1_AutoML_20190416_112303              | 136979 |
+View 2
+```sql
+-- view_2: find those GBM models order by mean residual variance
+create or replace view GBM_mean_residual as
+  select GBM_hyperparameter.model_id, leaderboard.mean_residual_deviance
+  from GBM_hyperparameter left join leaderboard on GBM_hyperparameter.model_id = leaderboard.model_id
+  order by leaderboard.mean_residual_deviance desc
+```
+```sql
+select * from GBM_mean_residual limit 10;
+```
+Query result:
+
+| model_id                                  | mean_residual_deviance |
+|:----------------------------------------------------:|:--------:|
+| GBM_grid_1_AutoML_20190418_163635_model_1 |           128663000000 |
+| GBM_grid_1_AutoML_20190418_165439_model_2 |            82503200000 |
+| GBM_3_AutoML_20190418_163635              |            25264600000 |
+| GBM_1_AutoML_20190418_163635              |            24080900000 |
+| GBM_3_AutoML_20190418_165439              |            23826700000 |
+| GBM_1_AutoML_20190418_165439              |            23652300000 |
+| GBM_grid_1_AutoML_20190418_172432_model_4 |            22196000000 |
+| GBM_1_AutoML_20190418_181012              |            21499300000 |
+| GBM_grid_1_AutoML_20190418_165439_model_1 |            20425600000 |
+| GBM_grid_1_AutoML_20190418_172432_model_2 |            20059400000 |
+
+View 3
+```sql
+-- view_3: order all models according to the rmse
+create or replace view rmse_order as
+  select model_id, rmse from leaderboard order by rmse desc
+```
+```sql
+select * from rmse_order limit 10;
+```
+Query result:
+
+| model_id                                            | rmse   |
+|:----------------------------------------------------:|:--------:|
+| GLM_grid_1_AutoML_20190416_112303_model_1           | 367363 |
+| StackedEnsemble_BestOfFamily_AutoML_20190416_102359 | 364482 |
+| StackedEnsemble_BestOfFamily_AutoML_20190416_112303 | 364461 |
+| GBM_grid_1_AutoML_20190418_163635_model_1           | 358697 |
+| StackedEnsemble_AllModels_AutoML_20190416_102359    | 358375 |
+| StackedEnsemble_AllModels_AutoML_20190416_112303    | 356004 |
+| GBM_grid_1_AutoML_20190418_165439_model_2           | 287234 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_4  | 232689 |
+| DeepLearning_grid_1_AutoML_20190416_102359_model_3  | 188405 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_3  | 187454 |
+View 4
+```sql
+-- view_4: get the rmse of models whose running time equals to 1000s
+create or replace view runtime_1000 as
+  select leaderboard.model_id, leaderboard.rmse, md.runtime
+  from leaderboard left join model_data md on leaderboard.model_id = md.model_id
+  where md.runtime = 1000
+```
+```sql
+select * from runtime_1000 limit 10;
+```
+Query result:
+
+| model_id                                            | rmse   | runtime |
+|:----------------------------------------------------:|:--------:|
+| DeepLearning_grid_1_AutoML_20190416_102359_model_3  | 188405 |    1000 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_1  | 150348 |    1000 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_2  | 186716 |    1000 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_3  | 187454 |    1000 |
+| DeepLearning_grid_1_AutoML_20190416_112303_model_4  | 232689 |    1000 |
+| DRF_1_AutoML_20190416_112303                        | 164222 |    1000 |
+| GLM_grid_1_AutoML_20190416_112303_model_1           | 367363 |    1000 |
+| StackedEnsemble_BestOfFamily_AutoML_20190416_102359 | 364482 |    1000 |
+| StackedEnsemble_BestOfFamily_AutoML_20190416_112303 | 364461 |    1000 |
+| XRT_1_AutoML_20190416_112303                        | 132969 |    1000 |
 ### Contribution
 Zeyu Zhang: 
 >1. Designed the database and draw the conceptual schema.
